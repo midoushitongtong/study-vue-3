@@ -3,7 +3,10 @@
     <input
       id="email"
       v-bind="attrs"
-      :class="['form-control', formError && 'is-invalid']"
+      :class="{
+        'form-control': true,
+        'is-invalid': formError,
+      }"
       :value="formValue"
       @blur="validateFormValue"
       @input="handleFormValueChange"

@@ -1,13 +1,31 @@
 <template>
+  <GlobalHeader :user="user" />
   <router-view />
+  <GlobalFooter />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import GlobalHeader from '@/components/GlobalHeader.vue';
+import GlobalFooter from '@/components/GlobalFooter.vue';
+import { User } from '@/apis/user/types';
+
+const user: User = {
+  isLogin: false,
+};
 
 export default defineComponent({
+  components: {
+    GlobalHeader,
+    GlobalFooter,
+  },
   name: 'App',
+  setup() {
+    return {
+      user,
+    };
+  },
 });
 </script>
 

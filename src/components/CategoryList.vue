@@ -3,10 +3,29 @@
     <div v-for="item of enhanceCategoryList" :key="item.id" class="col-md-3 col-sm-4 col-6 mb-4">
       <div class="card shadow-sm">
         <div class="card-body text-center">
-          <img :src="item.avatar" :alt="item.title" class="avatar mb-3" />
+          <RouterLink
+            :to="{
+              name: 'CategoryDetail',
+              params: {
+                id: item.id,
+              },
+            }"
+          >
+            <img :src="item.avatar" :alt="item.title" class="avatar mb-3" />
+          </RouterLink>
           <h5 class="card-title">{{ item.title }}</h5>
           <p class="card-text text-left">{{ item.description }}</p>
-          <a href="#" class="btn btn-outline-primary">进入专栏</a>
+          <RouterLink
+            :to="{
+              name: 'CategoryDetail',
+              params: {
+                id: item.id,
+              },
+            }"
+            class="btn btn-outline-primary"
+          >
+            进入专栏
+          </RouterLink>
         </div>
       </div>
     </div>
@@ -49,6 +68,6 @@ export default defineComponent({
   width: 75px;
   height: 75px;
   object-fit: cover;
-  border-radius: 50px;
+  border-radius: 5px;
 }
 </style>
