@@ -4,6 +4,7 @@
       <div class="mb-1">
         <label for="email" class="form-label">email</label>
         <ValidateInput
+          id="email"
           type="text"
           placeholder="input email"
           v-model:value="formValues.email"
@@ -33,6 +34,8 @@ import { defineComponent, ref } from 'vue';
 import ValidateForm, { ValidateFormRef } from '@/components/ValidateForm.vue';
 import ValidateInput, { Rule } from '@/components/ValidateInput.vue';
 import { useRouter } from 'vue-router';
+import { useStore } from '@/store';
+import { AccountActions } from '@/store/modules/account/types';
 
 type FormValues = {
   email: string;
@@ -53,6 +56,8 @@ export default defineComponent({
     // data ========================================================================================================================
     const router = useRouter();
 
+    const store = useStore();
+
     const validateFormRef = ref<ValidateFormRef | null>(null);
 
     const formValues = ref<FormValues>({
@@ -71,12 +76,12 @@ export default defineComponent({
     // method ========================================================================================================================
     const handleFormSubmit = (isValid: boolean) => {
       if (isValid) {
-        router.push({
-          name: 'CategoryDetail',
-          params: {
-            id: 1,
-          },
+        store.dispatch(AccountActions.UPDATE_USER, {
+          isLogin: true,
+          name: 'abc 123',
+          categoryId: 2,
         });
+        router.replace('/');
       }
     };
 

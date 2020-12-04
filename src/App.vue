@@ -5,15 +5,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onMounted } from 'vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GlobalHeader from '@/components/GlobalHeader.vue';
 import GlobalFooter from '@/components/GlobalFooter.vue';
-import { User } from '@/apis/user/types';
-
-const user: User = {
-  isLogin: false,
-};
+import { useStore } from '@/store';
+import { getCategoryList } from '@/apis/category';
+import { ContentActions } from '@/store/modules/content/types';
+import { getPostList } from './apis/post';
 
 export default defineComponent({
   components: {
@@ -22,6 +21,26 @@ export default defineComponent({
   },
   name: 'App',
   setup() {
+    // data ========================================================================================================================
+    const store = useStore();
+
+    // computed ========================================================================================================================
+    const user = computed(() => store.state.account.user);
+
+    // lifecycle ========================================================================================================================
+    onMounted(async () => {
+      try {
+        const results = await Promise.all([await getCategoryList(), await getPostList()]);
+
+        store.dispatch(ContentActions.UPDATE_CATEGORY_LIST, results[0]);
+        store.dispatch(ContentActions.UPDATE_POST_LIST, results[1]);
+      } catch (error) {
+        console.error('获取 api 数据失败');
+        console.error(error);
+      }
+    });
+
+    // template data ========================================================================================================================
     return {
       user,
     };

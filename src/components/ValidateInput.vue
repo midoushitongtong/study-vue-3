@@ -1,12 +1,18 @@
 <template>
   <div class="pb-3">
     <input
-      id="email"
+      v-if="tag === 'input'"
       v-bind="attrs"
-      :class="{
-        'form-control': true,
-        'is-invalid': formError,
-      }"
+      :class="['form-control', formError ? 'is-invalid' : '']"
+      :value="formValue"
+      @blur="validateFormValue"
+      @input="handleFormValueChange"
+    />
+
+    <textarea
+      v-if="tag === 'textarea'"
+      v-bind="attrs"
+      :class="['form-control', formError ? 'is-invalid' : '']"
       :value="formValue"
       @blur="validateFormValue"
       @input="handleFormValueChange"
@@ -49,6 +55,13 @@ export default defineComponent({
       required: false,
       default: '',
       type: String,
+    },
+    tag: {
+      required: false,
+      default: 'input',
+      validator: (value: string) => {
+        return ['input', 'textarea'].includes(value);
+      },
     },
   },
   setup(props, context) {
@@ -138,12 +151,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.avatar {
-  width: 75px;
-  height: 75px;
-  object-fit: cover;
-  border-radius: 50px;
-}
-</style>

@@ -1,6 +1,8 @@
 import { onMounted, onUnmounted, ref, Ref } from 'vue';
 
-export const useClickOutside = (elementRef: Ref<null | HTMLElement>) => {
+type UseClickOutsideReturns = Ref<boolean>;
+
+export const useClickOutside = (elementRef: Ref<null | HTMLElement>): UseClickOutsideReturns => {
   const isClickOutside = ref(false);
 
   const handleDocumentClick = (event: MouseEvent) => {

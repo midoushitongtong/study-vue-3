@@ -54,7 +54,7 @@ export default defineComponent({
       });
     };
 
-    // lifecycle
+    // lifecycle ========================================================================================================================
     emitter.on('validate-form-item-mounted', handleValidateFormItemMounted);
     onUnmounted(() => {
       emitter.off('validate-form-item-mounted', handleValidateFormItemMounted);
@@ -69,12 +69,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.avatar {
-  width: 75px;
-  height: 75px;
-  object-fit: cover;
-  border-radius: 50px;
-}
-</style>

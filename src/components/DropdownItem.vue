@@ -1,10 +1,5 @@
 <template>
-  <div
-    :class="{
-      'dropdown-item': true,
-      disabled: 'disabled',
-    }"
-  >
+  <div :class="['dropdown-item', disabled ? 'disabled' : '']">
     <slot />
   </div>
 </template>

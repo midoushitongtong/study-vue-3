@@ -7,14 +7,10 @@
           <div v-if="item.image" class="col-3">
             <img :src="item.image" :alt="item.title" class="w-100 avatar" />
           </div>
-          <p
-            :class="{
-              'col-9': item.image,
-            }"
-          >
+          <div :class="[item.image ? 'col-9' : '']">
             {{ item.content }}
-          </p>
-          <span class="text-muted">{{ item.createdAt }}</span>
+          </div>
+          <span class="text-muted mt-3">{{ item.createdAt }}</span>
         </div>
       </div>
     </div>

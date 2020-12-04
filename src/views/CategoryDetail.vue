@@ -1,28 +1,29 @@
 <template>
-  <div class="container" v-if="!loading">
+  <div class="container" v-if="category">
     <div class="mb-4 mx-auto">
       <div class="row">
-        <div class="col-3 pr-3">
-          <img :src="category.avatar" :alt="category.title" class="w-100 avatar" />
+        <div class="col-2 pr-3">
+          <img :src="enhanceAvatar(category?.avatar)" :alt="category.title" class="w-100 avatar" />
         </div>
-        <div class="col-9 pl-3">
+        <div class="col-10 pl-3">
           <h4 class="title">{{ category.title }}</h4>
           <p class="text-muted">{{ category.description }}</p>
         </div>
       </div>
     </div>
+    <hr />
     <PostList :postList="postList" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import { getCategoryList } from '@/apis/category';
-import { Category } from '@/apis/category/types';
-import { getPostList } from '@/apis/post';
-import { Post } from '@/apis/post/types';
 import PostList from '@/components/PostList.vue';
+import { useStore } from '@/store';
+import { ContentGetters } from '@/store/modules/content/types';
+import { Category } from '@/apis/category/types';
+import { Post } from '@/apis/post/types';
 
 export default defineComponent({
   name: 'CategoryDetail',
@@ -32,59 +33,40 @@ export default defineComponent({
   setup() {
     // data ========================================================================================================================
     const route = useRoute();
-    const loading = ref(true);
-    const category = ref<Category | undefined>(undefined);
-    const postList = ref<Post[]>([]);
-
+    const store = useStore();
     const currentId = +route.params.id;
 
-    onMounted(async () => {
-      try {
-        const categoryListResult = await getCategoryList();
-        const categoryResult = categoryListResult.find((item) => item.id === currentId);
-        if (categoryResult) {
-          if (!categoryResult.avatar) {
-            categoryResult.avatar = require('@/assets/column.jpg');
-          }
-        } else {
-          throw new Error('找不到此分类');
-        }
+    // computed ========================================================================================================================
+    const category = computed<Category>(() =>
+      store.getters[ContentGetters.CATEROTY_BY_CATEGORY_ID](currentId)
+    );
+    const postList = computed<Post[]>(() =>
+      store.getters[ContentGetters.POST_LIST_BY_CATEGORY_ID](currentId)
+    );
 
-        category.value = categoryResult;
-
-        try {
-          const postListResult = await getPostList();
-          postList.value = postListResult.filter((item) => item.categoryId === currentId);
-
-          loading.value = false;
-        } catch (error) {
-          console.log('(api) 获取文章列表失败');
-          console.log(error);
-        }
-      } catch (error) {
-        console.log('(api) 获取分类详情失败');
-        console.log(error);
-      }
-    });
+    // method ========================================================================================================================
+    const enhanceAvatar = (avatar?: string) => avatar || require('@/assets/images/column.jpg');
 
     // template data ========================================================================================================================
     return {
-      loading,
       category,
       postList,
+      enhanceAvatar,
     };
   },
 });
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/scss/media.scss';
+
 .avatar {
   border-radius: 5px;
 }
 
 .title {
   margin-top: 10px;
-  @media (max-width: 576px) {
+  @include deviceType('mobile') {
     margin-top: 0;
   }
 }
