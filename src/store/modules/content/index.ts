@@ -37,7 +37,7 @@ export default {
   getters: {
     // 根据分类 id 获取分类详情
     [ContentGetters.CATEROTY_BY_CATEGORY_ID]: (state: ContentState) => (
-      categoryId: number
+      categoryId: string
     ): Category | undefined => {
       return state.categoryList.find((item) => item.id === categoryId);
     },

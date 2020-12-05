@@ -17,8 +17,8 @@ export default defineComponent({
   name: 'GlobalHeader',
   props: {
     title: {
-      required: true,
       type: String,
+      required: true,
     },
   },
   setup() {

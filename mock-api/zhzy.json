@@ -8,18 +8,96 @@
         "lastMigration": 11,
         "name": "fork-zhihu",
         "endpointPrefix": "",
-        "latency": 10,
+        "latency": 500,
         "port": 3000,
         "routes": [
           {
             "uuid": "",
             "documentation": "",
             "method": "get",
-            "endpoint": "list",
+            "endpoint": "categoryList",
             "responses": [
               {
                 "uuid": "",
-                "body": "{\n  \"data\": [\n    {{# repeat (queryParam 'pageSize' '10') }}\n      {\n        \"id\": \"{{ faker 'random.uuid' }}\",\n        \"username\":\"{{ faker 'name.firstName' }}\",\n      }\n    {{/ repeat }}\n  ],\n  \"pageNum\": \"{{ queryParam 'pageNum' '1'  }}\",\n  \"pageSize\": \"{{ queryParam 'pagePageSize' '10'  }}\",\n  \"total\": 50\n}\n",
+                "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"test1专栏\",\n      \"description\": \"这是test1专栏, 有一段非常有意思的简介, 可以更新一下\",\n      \"avatar\": \"https://pic4.zhimg.com/80/v2-38b6c8c673d7431e8ebc4014c8c58d02_720w.jpg?source=1940ef5c\"\n    },\n    {\n      \"id\": 2,\n      \"title\": \"test2专栏\",\n      \"description\": \"这是test2专栏, 有一段非常有意思的简介, 可以更新一下可以更新一下可以更新一下\",\n      \"avatar\": \"https://pic4.zhimg.com/80/v2-e7a286a48b91ddf9382979c9dcc90b11_720w.jpg?source=1940ef5c\"\n    },\n    {\n      \"id\": 3,\n      \"title\": \"test3专栏\",\n      \"description\": \"这是test3专栏, 有一段非常有意思的简介, 可以更新一下\"\n    },\n    {\n      \"id\": 4,\n      \"title\": \"test4专栏\",\n      \"description\": \"这是test4专栏, 有一段非常有意思的简介, 可以更新一下\",\n      \"avatar\": \"https://pic4.zhimg.com/80/v2-040e20fbae43ff6c7597bafddeb45bff_720w.jpg?source=1940ef5c\"\n    }\n  ],\n  \"pageNumber\": \"{{ queryParam 'pageNum' '1'  }}\",\n  \"pageSize\": \"{{ queryParam 'pagePageSize' '10'  }}\",\n  \"total\": 50\n}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "postList",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"这是我的第一篇文章\",\n      \"content\": \"\\\"this is a new post you Very often we will need to map routes with the given pattern to the same component. For example we may have a User component which should be rendered for all users but with dif...\\\"\",\n      \"image\": \"https://pic1.zhimg.com/80/v2-4551acdffef68b5e25e6eafbdef8f8d0_720w.jpg?source=1940ef5c\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 2,\n      \"title\": \"这是我的第二篇文章\",\n      \"content\": \"\\\"this is a new post you Very often we will need to map routes with the given pattern to the same component. For example we may have a User component which should be rendered for all users but with dif...\\\"\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 3,\n      \"title\": \"这是我的第三篇文章\",\n      \"content\": \"\\\"this is a new post you Very often we will need to map routes with the given pattern to the same component. For example we may have a User component which should be rendered for all users but with dif...\\\"\",\n      \"image\": \"https://pic2.zhimg.com/80/v2-c4a80e31fd6b1672d205d54cf92d6a5f_720w.jpg?source=1940ef5c\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 3,\n      \"title\": \"这是我的第四篇文章\",\n      \"content\": \"\\\"this is a new post you Very often we will need to map routes with the given pattern to the same component. For example we may have a User component which should be rendered for all users but with dif...\\\"\",\n      \"image\": \"https://pic2.zhimg.com/80/v2-46e1d3d5c9ce6bad146107b3b12798c6_720w.jpg?source=1940ef5c\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 3,\n      \"title\": \"这是我的第五篇文章\",\n      \"content\": \"\\\"this is a new post you Very often we will need to map routes with the given pattern to the same component. For example we may have a User component which should be rendered for all users but with dif...\\\"\",\n      \"image\": \"https://pic1.zhimg.com/80/v2-b96224c5ddc65f5d63479fa1d68a9c73_720w.jpg?source=1940ef5c\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    }\n  ],\n  \"pageNumber\": \"{{ queryParam 'pageNum' '1'  }}\",\n  \"pageSize\": \"{{ queryParam 'pagePageSize' '10'  }}\",\n  \"total\": 50\n}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "post",
+            "endpoint": "post",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{\n  \"code\": 0 \n}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "post",
+            "endpoint": "account/login",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{\n  \"code\": 0 \n}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",

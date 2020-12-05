@@ -36,6 +36,7 @@ import ValidateInput, { Rule } from '@/components/ValidateInput.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AccountActions } from '@/store/modules/account/types';
+import { login } from '@/apis/account';
 
 type FormValues = {
   email: string;
@@ -74,13 +75,23 @@ export default defineComponent({
     };
 
     // method ========================================================================================================================
-    const handleFormSubmit = (isValid: boolean) => {
+    const handleFormSubmit = async (isValid: boolean) => {
       if (isValid) {
-        store.dispatch(AccountActions.UPDATE_USER, {
-          isLogin: true,
-          name: 'abc 123',
-          categoryId: 2,
-        });
+        try {
+          await login({
+            email: formValues.value.email,
+            password: formValues.value.password,
+          });
+
+          store.dispatch(AccountActions.UPDATE_USER, {
+            isLogin: true,
+            name: formValues.value.email,
+            categoryId: 2,
+          });
+        } catch (error) {
+          console.error('获取 api 数据失败');
+          console.error(error);
+        }
         router.replace('/');
       }
     };

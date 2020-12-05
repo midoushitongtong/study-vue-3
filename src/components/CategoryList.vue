@@ -13,8 +13,8 @@
           >
             <img :src="enhanceAvatar(item?.avatar)" :alt="item.title" class="avatar mb-3" />
           </RouterLink>
-          <h5 class="card-title">{{ item.title }}</h5>
-          <p class="card-text text-left">{{ item.description }}</p>
+          <h5 class="card-title title">{{ item.title }}</h5>
+          <p class="card-text text-left description">{{ item.description }}</p>
           <RouterLink
             :to="{
               name: 'CategoryDetail',
@@ -40,8 +40,8 @@ export default defineComponent({
   name: 'CategoryList',
   props: {
     categoryList: {
-      required: true,
       type: Array as PropType<Category[]>,
+      required: true,
     },
   },
   setup() {
@@ -61,5 +61,17 @@ export default defineComponent({
   width: 75px;
   height: 75px;
   border-radius: 5px;
+}
+
+.title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.description {
+  line-height: 22px;
+  height: 22 * 3px;
+  overflow: hidden;
 }
 </style>

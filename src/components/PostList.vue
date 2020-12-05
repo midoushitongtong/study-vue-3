@@ -25,8 +25,8 @@ export default defineComponent({
   name: 'PostList',
   props: {
     postList: {
-      required: true,
       type: Array as PropType<Post[]>,
+      required: true,
     },
   },
 });

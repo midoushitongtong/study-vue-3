@@ -6,3 +6,10 @@ export type Post = {
   createdAt: string;
   categoryId: number;
 };
+
+export type GetPostListReturns = {
+  data: Post[];
+  pageNumber: number;
+  pageSize: number;
+  total: number;
+};

@@ -47,14 +47,14 @@ export default defineComponent({
   inject: ['emitter'],
   props: {
     rules: {
+      type: Array as PropType<Rule[]>,
       required: false,
       default: null,
-      type: Array as PropType<Rule[]>,
     },
     value: {
+      type: String,
       required: false,
       default: '',
-      type: String,
     },
     tag: {
       required: false,

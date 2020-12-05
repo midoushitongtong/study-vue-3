@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { User } from '@/apis/user/types';
+import { User } from '@/apis/account/types';
 import Dropdown from '@/components/Dropdown.vue';
 import DropdownItem from '@/components/DropdownItem.vue';
 import { useStore } from '@/store';
@@ -47,8 +47,8 @@ export default defineComponent({
   },
   props: {
     user: {
-      required: true,
       type: Object as PropType<User>,
+      required: true,
     },
   },
   setup() {
