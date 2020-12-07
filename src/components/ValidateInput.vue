@@ -30,13 +30,15 @@ type ValidateFormValue = () => boolean;
 type ResetFormValue = () => void;
 
 export type ValidateInputRef = {
+  formError: boolean;
   validateFormValue: ValidateFormValue;
   resetFormValue: ResetFormValue;
 };
 
 export type Rule = {
-  type: 'required' | 'email';
+  type: 'required' | 'email' | 'custom';
   message: string;
+  validator?: () => boolean;
 };
 
 const emailRegexp = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -85,6 +87,9 @@ export default defineComponent({
             case 'email':
               isPass = emailRegexp.test(formValue.value);
               break;
+            case 'custom':
+              isPass = item.validator ? item.validator() : true;
+              break;
           }
           if (!isPass) {
             formErrorMessage.value = item.message;
@@ -118,6 +123,7 @@ export default defineComponent({
       context.emit('update:value', '');
       formError.value = false;
       formErrorMessage.value = '';
+      validateFormValue();
     };
 
     // watch ========================================================================================================================

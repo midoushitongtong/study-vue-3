@@ -8,9 +8,7 @@ import {
 
 const initState: AccountState = {
   user: {
-    isLogin: true,
-    categoryId: 1,
-    name: 'abc 123',
+    isLogin: false,
   },
 };
 

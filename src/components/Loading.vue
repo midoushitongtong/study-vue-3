@@ -28,6 +28,8 @@
 <script lang="ts">
 import { defineComponent, onUnmounted } from 'vue';
 
+let currentLoadingDivCount = 1;
+
 export default defineComponent({
   name: 'Loading',
   props: {
@@ -39,7 +41,7 @@ export default defineComponent({
     coverScreen: {
       type: Boolean,
       required: false,
-      default: false,
+      default: true,
     },
   },
   setup(props) {
@@ -47,10 +49,9 @@ export default defineComponent({
     // 如果 loading 需要覆盖整个屏幕
     // 就手动创建一个 div, 利用 teleport 插入到此 div
     if (props.coverScreen && loadingId === '') {
-      const currentLoadingDivCount = document.querySelectorAll('.loading-wrapper');
       const node = document.createElement('div');
       node.classList.add('loading-wrapper');
-      loadingId = `loading-${currentLoadingDivCount.length + 1}`;
+      loadingId = `loading-${currentLoadingDivCount++}`;
       node.id = loadingId;
       document.body.appendChild(node);
     }
@@ -65,8 +66,6 @@ export default defineComponent({
         }
       }
     });
-
-    console.log(loadingId);
 
     // template data  ========================================================================================================================
     return {
@@ -85,6 +84,7 @@ export default defineComponent({
   left: 0;
   width: 100vw;
   height: 100vh;
+  background-color: rgba(0, 0, 0, 0.1);
 }
 </style>
 

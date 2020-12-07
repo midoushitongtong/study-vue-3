@@ -8,7 +8,7 @@
         <ValidateInput
           id="title"
           type="text"
-          placeholder="input title"
+          placeholder="输入文章标题"
           v-model:value="formValues.title"
           :rules="formRules.title"
         />
@@ -20,7 +20,7 @@
           tag="textarea"
           id="content"
           :rules="formRules.content"
-          placeholder="input content"
+          placeholder="输入文章内容"
           v-model:value="formValues.content"
         />
       </div>

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h5>登陆</h5>
+    <h5>注册</h5>
     <hr />
     <ValidateForm @submit="handleFormSubmit" ref="validateFormRef">
       <div class="mb-1">
@@ -23,8 +23,19 @@
           v-model:value="formValues.password"
         />
       </div>
+      <div class="mb-1">
+        <label for="confirm-password" class="form-label">确认密码</label>
+        <ValidateInput
+          id="confirm-password"
+          type="password"
+          :rules="formRules.confirmPassword"
+          placeholder="确认密码"
+          v-model:value="formValues.confirmPassword"
+          ref="confirmPasswordRef"
+        />
+      </div>
       <template #submit>
-        <button type="submit" class="btn btn-primary mr-2">登录</button>
+        <button type="submit" class="btn btn-primary mr-2">注册</button>
         <button type="button" class="btn btn-warning" @click="handleFormReset">重置</button>
       </template>
     </ValidateForm>
@@ -34,19 +45,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import ValidateForm, { ValidateFormRef } from '@/components/ValidateForm.vue';
-import ValidateInput, { Rule } from '@/components/ValidateInput.vue';
+import ValidateInput, { ValidateInputRef, Rule } from '@/components/ValidateInput.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AccountActions } from '@/store/modules/account/types';
-import { login, getUserInfo } from '@/apis/account';
+import { register, getUserInfo } from '@/apis/account';
 import Loading from '@/components/Loading.vue';
 import { showMessage } from '@/utils/message';
 
 type FormValues = {
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
 type FormRules = {
@@ -68,9 +80,12 @@ export default defineComponent({
 
     const validateFormRef = ref<ValidateFormRef | null>(null);
 
+    const confirmPasswordRef = ref<ValidateInputRef | null>(null);
+
     const formValues = ref<FormValues>({
       email: '',
       password: '',
+      confirmPassword: '',
     });
 
     const formRules: FormRules = {
@@ -79,6 +94,16 @@ export default defineComponent({
         { type: 'email', message: '这是一个无效的电子邮箱地址' },
       ],
       password: [{ type: 'required', message: '密码不能为空' }],
+      confirmPassword: [
+        { type: 'required', message: '确认密码不能为空' },
+        {
+          type: 'custom',
+          message: '两次输入密码不一致',
+          validator: () => {
+            return formValues.value.password === formValues.value.confirmPassword;
+          },
+        },
+      ],
     };
 
     const loginLoading = ref<boolean>(false);
@@ -89,9 +114,10 @@ export default defineComponent({
         loginLoading.value = true;
 
         try {
-          const result = await login({
+          const result = await register({
             email: formValues.value.email,
             password: formValues.value.password,
+            confirmPassword: formValues.value.confirmPassword,
           });
           localStorage.setItem('accessToken', result.data.accessToken);
 
@@ -104,12 +130,10 @@ export default defineComponent({
 
           router.replace('/');
 
-          showMessage('登陆成功', 'success');
+          showMessage('注册成功', 'success');
         } catch (error) {
           console.error('获取 api 数据失败');
           console.error(error);
-
-          showMessage('用户名或密码有误', 'default');
         } finally {
           loginLoading.value = false;
         }
@@ -120,9 +144,18 @@ export default defineComponent({
       validateFormRef.value?.resetForm();
     };
 
+    // watch ========================================================================================================================
+    watch(formValues.value, () => {
+      // 如果当前确认密码表单验证失败, 重新验证
+      if (confirmPasswordRef.value?.formError && formValues.value.confirmPassword) {
+        confirmPasswordRef.value.validateFormValue();
+      }
+    });
+
     // template data ========================================================================================================================
     return {
       validateFormRef,
+      confirmPasswordRef,
       formValues,
       formRules,
       handleFormSubmit,

@@ -8,17 +8,17 @@
             <RouterLink to="/login" class="btn btn-outline-light my-2">登陆</RouterLink>
           </li>
           <li class="list-inline-item">
-            <RouterLink to="/login" class="btn btn-outline-light my-2">注册</RouterLink>
+            <RouterLink to="/register" class="btn btn-outline-light my-2">注册</RouterLink>
           </li>
         </ul>
         <ul v-else class="list-inline mb-0">
           <li class="list-inline-item">
             <Dropdown :title="`你好 ${user.name}`">
               <DropdownItem>
-                <RouterLink to="/post/add" @click="handleDropdownCick">新建文章</RouterLink>
+                <RouterLink to="/post/add">新建文章</RouterLink>
               </DropdownItem>
               <DropdownItem disabled>
-                <a @click="handleDropdownCick">编辑资料</a>
+                <a>编辑资料</a>
               </DropdownItem>
               <DropdownItem>
                 <a @click="handleLogout">退出登录</a>
@@ -56,18 +56,14 @@ export default defineComponent({
     const store = useStore();
 
     // method ========================================================================================================================
-    const handleDropdownCick = () => {
-      console.log('菜单按下');
-    };
-
     const handleLogout = () => {
+      localStorage.removeItem('accessToken');
       store.dispatch(AccountActions.UPDATE_USER, {
         isLogin: false,
       });
     };
 
     return {
-      handleDropdownCick,
       handleLogout,
     };
   },
