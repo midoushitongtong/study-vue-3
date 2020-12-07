@@ -2,6 +2,12 @@
   <div class="container">
     <h5>新建文章</h5>
     <hr />
+    <!-- multipart/form-data 才能传输二进制数据 -->
+    <Upload
+      :action="`${config.apiRoot}/uploadFile`"
+      :beforeUpload="beforeUpload"
+      @uploadSuccess="handleUploadSuccess"
+    />
     <ValidateForm @submit="handleFormSubmit" ref="validateFormRef">
       <div class="mb-1">
         <label for="title" class="form-label">文章标题：</label>
@@ -37,8 +43,11 @@ import ValidateForm, { ValidateFormRef } from '@/components/ValidateForm.vue';
 import ValidateInput, { Rule } from '@/components/ValidateInput.vue';
 import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
-import { Post } from '@/apis/post/types';
+import { Post, UploadFileReturns } from '@/apis/post/types';
 import { ContentActions } from '@/store/modules/content/types';
+import Upload from '@/components/Upload.vue';
+import config from '@/config';
+import { showMessage } from '@/utils/message';
 
 type FormValues = {
   title: string;
@@ -54,6 +63,7 @@ export default defineComponent({
   components: {
     ValidateForm,
     ValidateInput,
+    Upload,
   },
   setup() {
     // data ========================================================================================================================
@@ -74,7 +84,7 @@ export default defineComponent({
     };
 
     // method ========================================================================================================================
-    const handleFormSubmit = (isValid: boolean) => {
+    const handleFormSubmit = (isValid: boolean): void => {
       if (isValid) {
         const { categoryId } = store.state.account.user;
         if (categoryId) {
@@ -112,12 +122,29 @@ export default defineComponent({
       }
     };
 
+    const beforeUpload = (file: File): boolean => {
+      const isImageFile = ['image/jpeg', 'image/png'].includes(file.type);
+
+      if (!isImageFile) {
+        showMessage('只能上传 .jpg .jpeg .png 后缀的图片', 'error');
+      }
+
+      return isImageFile;
+    };
+
+    const handleUploadSuccess = (data: UploadFileReturns) => {
+      console.log(data);
+    };
+
     // template data ========================================================================================================================
     return {
       validateFormRef,
       formValues,
       formRules,
       handleFormSubmit,
+      config,
+      beforeUpload,
+      handleUploadSuccess,
     };
   },
 });

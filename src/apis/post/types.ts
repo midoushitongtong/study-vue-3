@@ -13,3 +13,11 @@ export type GetPostListReturns = {
   pageSize: number;
   total: number;
 };
+
+export type AddPostParams = void;
+
+export type AddPostReturns = void;
+
+export type UploadFileReturns = {
+  code: number;
+};
