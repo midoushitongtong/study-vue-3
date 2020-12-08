@@ -10,7 +10,7 @@ export type User = {
 // account state
 export type AccountState = {
   // 用户信息
-  user: User;
+  user: null | User;
 };
 
 // account mutations

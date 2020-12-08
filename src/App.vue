@@ -1,6 +1,6 @@
 <template>
   <template v-if="!loading">
-    <GlobalHeader :user="user" />
+    <GlobalHeader />
     <router-view />
     <GlobalFooter />
   </template>
@@ -17,9 +17,9 @@ import { getCategoryList } from '@/apis/category';
 import { ContentActions } from '@/store/modules/content/types';
 import { getPostList } from './apis/post';
 import Loading from './components/Loading.vue';
+import { useRoute, useRouter } from 'vue-router';
+import { getUserInfo } from './apis/account';
 import { AccountActions } from './store/modules/account/types';
-import { getUserInfo } from '@/apis/account';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
   components: {
@@ -34,6 +34,8 @@ export default defineComponent({
 
     const router = useRouter();
 
+    const route = useRoute();
+
     const loading = ref(true);
 
     // computed ========================================================================================================================
@@ -47,7 +49,9 @@ export default defineComponent({
         store.dispatch(ContentActions.UPDATE_CATEGORY_LIST, results[0].data);
         store.dispatch(ContentActions.UPDATE_POST_LIST, results[1].data);
 
+        // 初始化登陆状态
         const accessToken = localStorage.getItem('accessToken');
+
         if (accessToken) {
           try {
             // 获取登陆的用户数据
@@ -57,52 +61,54 @@ export default defineComponent({
               categoryId: userInfo.data.categoryId,
               name: userInfo.data.name,
             });
+
+            console.log('获取登陆状态成功');
           } catch (error) {
             // 登陆状态已失效
             localStorage.removeItem('accessToken');
-            console.error('获取 api 数据失败');
-            console.error(error);
+            if (route.meta?.requiredLogin) {
+              router.replace({
+                name: 'Login',
+              });
+            }
+
+            // 判断当前页面是否需要登录
+            if (route.meta?.requiredLogin) {
+              router.replace({
+                name: 'Login',
+              });
+            }
+
+            console.error('登陆状态已失效');
+          }
+        } else {
+          // 判断当前页面是否需要登录
+          if (route.meta?.requiredLogin) {
+            router.replace({
+              name: 'Login',
+            });
           }
         }
 
-        loading.value = false;
-
         // 设置路由守卫
-        router.beforeEach((to, from, next) => {
-          if (to.meta?.requiredLogin && !store.state.account.user.isLogin) {
-            // 此路由需要登录才能访问
-            next({
-              replace: true,
-              name: 'Login',
-            });
+        router.beforeEach(async (to, from, next) => {
+          const { user } = store.state.account;
+          const { requiredLogin } = to.meta;
 
-            console.log('此路由需要登录才能访问, 已跳转到登录页面');
-          } else if (to.name === 'Login' && store.state.account.user.isLogin) {
-            // 如果已登录还继续访问登录页, 跳转到首页
-            next({
-              replace: true,
-              name: 'Home',
-            });
-
-            console.log('当前访问登录页面, 但已经登陆了, 已跳转到首页');
+          if (requiredLogin) {
+            if (user) {
+              next();
+            } else {
+              next({
+                name: 'Login',
+              });
+            }
           } else {
             next();
           }
         });
 
-        // 订阅 vuex
-        store.subscribe((item) => {
-          if (item.type === AccountActions.UPDATE_USER) {
-            if (router.currentRoute.value.meta?.requiredLogin) {
-              // 如果退出登录了, 刚好当前停留的页面又需要登录, 跳转到登录页
-              router.replace({
-                name: 'Login',
-              });
-
-              console.log('当前页面需要登录, 已跳转到登录页面');
-            }
-          }
-        });
+        loading.value = false;
       } catch (error) {
         console.error('获取 api 数据失败');
         console.error(error);

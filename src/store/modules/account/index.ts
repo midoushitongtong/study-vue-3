@@ -7,9 +7,7 @@ import {
 } from '@/store/modules/account/types';
 
 const initState: AccountState = {
-  user: {
-    isLogin: false,
-  },
+  user: null,
 };
 
 export default {

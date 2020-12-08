@@ -7,7 +7,15 @@
       :action="`${config.apiRoot}/uploadFile`"
       :beforeUpload="beforeUpload"
       @uploadSuccess="handleUploadSuccess"
-    />
+    >
+      <template #default="{ triggetUpload }">
+        <button @click="triggetUpload" class="btn btn-primary">点击上传</button>
+      </template>
+      <template #success="{ uploadResult }">
+        <img :src="uploadResult.url" class="preview-image" />
+      </template>
+      <template #loading>上传中...</template>
+    </Upload>
     <ValidateForm @submit="handleFormSubmit" ref="validateFormRef">
       <div class="mb-1">
         <label for="title" class="form-label">文章标题：</label>
@@ -86,7 +94,7 @@ export default defineComponent({
     // method ========================================================================================================================
     const handleFormSubmit = (isValid: boolean): void => {
       if (isValid) {
-        const { categoryId } = store.state.account.user;
+        const categoryId = store.state?.account?.user?.categoryId;
         if (categoryId) {
           const currentDate = new Date();
           const newPost: Post = {
@@ -149,3 +157,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.preview-image {
+  width: 100px;
+  height: 100px;
+}
+</style>

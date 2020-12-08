@@ -1,14 +1,21 @@
 <template>
   <div class="file-upload">
-    <button v-if="fileStatus === 'loading'" class="btn btn-primary" @click="triggetUpload">
-      正在上传 ...
-    </button>
-    <button v-if="fileStatus === 'success'" class="btn btn-primary" @click="triggetUpload">
-      上传成功
-    </button>
-    <button v-if="fileStatus === 'ready'" class="btn btn-primary" @click="triggetUpload">
-      点击上传
-    </button>
+    <slot v-if="fileStatus === 'loading'" name="loading" :triggetUpload="triggetUpload">
+      <button class="btn btn-primary">正在上传 ...</button>
+    </slot>
+
+    <slot
+      v-if="fileStatus === 'success'"
+      name="success"
+      :triggetUpload="triggetUpload"
+      :uploadResult="uploadResult"
+    >
+      <button class="btn btn-primary">上传成功</button>
+    </slot>
+
+    <slot v-if="fileStatus === 'ready'" name="default" :triggetUpload="triggetUpload">
+      <button class="btn btn-primary">点击上传</button>
+    </slot>
 
     <input type="file" class="file-input d-none" ref="fileInputRef" @change="handleFileChange" />
   </div>
@@ -44,6 +51,8 @@ export default defineComponent({
 
     const fileStatus = ref<UploadStatus>('ready');
 
+    const uploadResult = ref<unknown>(null);
+
     const triggetUpload = () => {
       if (fileInputRef.value) {
         fileInputRef.value.click();
@@ -77,7 +86,7 @@ export default defineComponent({
         try {
           fileStatus.value = 'loading';
 
-          const uploadResult = await fetch.post(props.action, formData, {
+          const result = await fetch.post(props.action, formData, {
             /**
              * FormData 类型的数据
              * axios 会自动设置请求头的 Content-Type 为 multipart/form-data
@@ -88,8 +97,10 @@ export default defineComponent({
             // },
           });
 
+          uploadResult.value = result.data;
+
           fileStatus.value = 'success';
-          context.emit('uploadSuccess', uploadResult.data);
+          context.emit('uploadSuccess', result.data);
         } catch (error) {
           console.log('文件上传失败');
           console.log(error);
@@ -108,6 +119,7 @@ export default defineComponent({
       fileStatus,
       fileInputRef,
       triggetUpload,
+      uploadResult,
       handleFileChange,
     };
   },

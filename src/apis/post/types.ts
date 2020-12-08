@@ -20,4 +20,5 @@ export type AddPostReturns = void;
 
 export type UploadFileReturns = {
   code: number;
+  url: string;
 };
