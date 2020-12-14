@@ -7,14 +7,21 @@
       :action="`${config.apiRoot}/uploadFile`"
       :beforeUpload="beforeUpload"
       @uploadSuccess="handleUploadSuccess"
+      class="my-4"
     >
       <template #default="{ triggetUpload }">
-        <button @click="triggetUpload" class="btn btn-primary">点击上传</button>
+        <div @click="triggetUpload" class="upload-area bg-light text-second">点击上传封面</div>
       </template>
-      <template #success="{ uploadResult }">
-        <img :src="uploadResult.url" class="preview-image" />
+      <template #success="{ uploadResult, triggetUpload }">
+        <div @click="triggetUpload" class="upload-area bg-light text-second">
+          <img :src="uploadResult.url" class="preview-image" />
+        </div>
       </template>
-      <template #loading>上传中...</template>
+      <template #loading>
+        <div class="upload-area bg-light text-second">
+          <Loading :coverScreen="false" />
+        </div>
+      </template>
     </Upload>
     <ValidateForm @submit="handleFormSubmit" ref="validateFormRef">
       <div class="mb-1">
@@ -39,23 +46,25 @@
         />
       </div>
       <template #submit>
-        <button type="submit" class="btn btn-primary mr-2">submit</button>
+        <button type="submit" class="btn btn-primary mr-2">提交</button>
       </template>
     </ValidateForm>
   </div>
+
+  <Loading v-if="isLoading" />
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import ValidateForm, { ValidateFormRef } from '@/components/ValidateForm.vue';
 import ValidateInput, { Rule } from '@/components/ValidateInput.vue';
-import { useStore } from '@/store';
 import { useRouter } from 'vue-router';
 import { Post, UploadFileReturns } from '@/apis/post/types';
-import { ContentActions } from '@/store/modules/content/types';
 import Upload from '@/components/Upload.vue';
 import config from '@/config';
 import { showMessage } from '@/utils/message';
+import Loading from '@/components/Loading.vue';
+import { addPost } from '@/apis/post';
 
 type FormValues = {
   title: string;
@@ -67,17 +76,20 @@ type FormRules = {
 };
 
 export default defineComponent({
-  name: 'CreatePost',
+  name: 'PostOperation',
   components: {
     ValidateForm,
     ValidateInput,
     Upload,
+    Loading,
   },
   setup() {
     // data ========================================================================================================================
-    const store = useStore();
-
     const router = useRouter();
+
+    const isLoading = ref<boolean>(false);
+
+    const image = ref<string | null>(null);
 
     const validateFormRef = ref<ValidateFormRef | null>(null);
 
@@ -92,16 +104,16 @@ export default defineComponent({
     };
 
     // method ========================================================================================================================
-    const handleFormSubmit = (isValid: boolean): void => {
+    const handleFormSubmit = async (isValid: boolean) => {
       if (isValid) {
-        const categoryId = store.state?.account?.user?.categoryId;
-        if (categoryId) {
+        try {
+          isLoading.value = true;
+
           const currentDate = new Date();
-          const newPost: Post = {
+          const newPost: Partial<Post> = {
             id: currentDate.getTime(),
             title: formValues.value.title,
             content: formValues.value.content,
-            categoryId,
             // 生成日期字符串 (2020-01-01 01:01:01)
             createdAt: `${currentDate.getFullYear()}-${currentDate
               .getMonth()
@@ -118,34 +130,52 @@ export default defineComponent({
               .padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`,
           };
 
-          store.dispatch(ContentActions.UPDATE_POST_LIST, [newPost, ...store.state.content.postList]);
+          if (image.value) {
+            newPost.image = image.value;
+          }
+
+          await addPost(newPost);
+
+          isLoading.value = false;
 
           router.push({
-            name: 'CategoryDetail',
+            name: 'PostShow',
             params: {
-              id: categoryId,
+              id: '1',
             },
           });
+        } catch (error) {
+          console.error('获取 api 数据失败');
+          console.error(error);
         }
       }
     };
 
     const beforeUpload = (file: File): boolean => {
-      const isImageFile = ['image/jpeg', 'image/png'].includes(file.type);
+      const fileTypeCheckPass = ['image/jpeg', 'image/png'].includes(file.type);
 
-      if (!isImageFile) {
+      if (!fileTypeCheckPass) {
         showMessage('只能上传 .jpg .jpeg .png 后缀的图片', 'error');
       }
 
-      return isImageFile;
+      // 最大 2048 kb
+      const maxSize = 2048;
+      const fileSizeCheckPass = file.size / 1024 < maxSize;
+
+      if (!fileSizeCheckPass) {
+        showMessage('图片大小不能超过 2mb', 'error');
+      }
+
+      return fileTypeCheckPass && fileSizeCheckPass;
     };
 
     const handleUploadSuccess = (data: UploadFileReturns) => {
-      console.log(data);
+      image.value = data.url;
     };
 
     // template data ========================================================================================================================
     return {
+      isLoading,
       validateFormRef,
       formValues,
       formRules,
@@ -159,8 +189,20 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.container {
+  max-width: 690px;
+}
+
 .preview-image {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+}
+
+.upload-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 175px;
+  font-size: 25px;
+  cursor: pointer;
 }
 </style>

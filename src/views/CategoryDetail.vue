@@ -1,13 +1,18 @@
 <template>
-  <div class="container" v-if="category">
+  <Loading v-if="isLoading" />
+  <div class="container" v-else>
     <div class="mb-4 mx-auto">
       <div class="row">
         <div class="col-2 pr-3">
-          <img :src="enhanceAvatar(category?.avatar)" :alt="category.title" class="w-100 avatar" />
+          <img
+            :src="enhanceAvatar(categoryDetail?.avatar)"
+            :alt="categoryDetail.title"
+            class="w-100 avatar"
+          />
         </div>
         <div class="col-10 pl-3">
-          <h4 class="title">{{ category.title }}</h4>
-          <p class="text-muted">{{ category.description }}</p>
+          <h4 class="title">{{ categoryDetail.title }}</h4>
+          <p class="text-muted">{{ categoryDetail.description }}</p>
         </div>
       </div>
     </div>
@@ -17,39 +22,60 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import PostList from '@/components/PostList.vue';
-import { useStore } from '@/store';
-import { ContentGetters } from '@/store/modules/content/types';
-import { Category } from '@/apis/category/types';
+import { getCategoryDetial } from '@/apis/category';
+import { getPostList } from '@/apis/post';
+import { CategoryDetail } from '@/apis/category/types';
 import { Post } from '@/apis/post/types';
+import Loading from '@/components/Loading.vue';
 
 export default defineComponent({
   name: 'CategoryDetail',
   components: {
     PostList,
+    Loading,
   },
   setup() {
     // data ========================================================================================================================
-    const route = useRoute();
-    const store = useStore();
-    const currentId = +route.params.id;
+    const isLoading = ref<boolean>(true);
 
-    // computed ========================================================================================================================
-    const category = computed<Category>(() =>
-      store.getters[ContentGetters.CATEROTY_BY_CATEGORY_ID](currentId)
-    );
-    const postList = computed<Post[]>(() =>
-      store.getters[ContentGetters.POST_LIST_BY_CATEGORY_ID](currentId)
-    );
+    const categoryDetail = ref<CategoryDetail | null>(null);
+
+    const postList = ref<Post[]>([]);
+
+    const route = useRoute();
 
     // method ========================================================================================================================
     const enhanceAvatar = (avatar?: string) => avatar || require('@/assets/images/column.jpg');
 
+    // 获取分类数据和文章数据
+    const iniData = async () => {
+      try {
+        if (route.params.id && typeof route.params.id === 'string') {
+          isLoading.value = true;
+          const result = await getCategoryDetial(route.params.id);
+          const result2 = await getPostList(route.params.id);
+          categoryDetail.value = result.data;
+          postList.value = result2.data;
+          isLoading.value = false;
+        }
+      } catch (error) {
+        console.error('获取 api 数据失败');
+        console.error(error);
+      }
+    };
+
+    // lifecycle ========================================================================================================================
+    onMounted(() => {
+      iniData();
+    });
+
     // template data ========================================================================================================================
     return {
-      category,
+      isLoading,
+      categoryDetail,
       postList,
       enhanceAvatar,
     };

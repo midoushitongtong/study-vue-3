@@ -2,9 +2,8 @@ import { RootState } from '@/store/types';
 import { ActionContext } from 'vuex';
 
 export type User = {
-  isLogin: boolean;
-  categoryId?: number;
-  name?: string;
+  id: number;
+  name: string;
 };
 
 // account state

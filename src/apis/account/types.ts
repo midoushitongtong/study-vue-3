@@ -1,7 +1,6 @@
 export type User = {
-  isLogin: boolean;
-  name?: string;
-  avatar?: string;
+  id: number;
+  name: string;
 };
 
 export type LoginParams = {
@@ -10,7 +9,6 @@ export type LoginParams = {
 };
 
 export type LoginReturns = {
-  code: number;
   data: {
     accessToken: string;
   };
@@ -23,16 +21,14 @@ export type RegisterParams = {
 };
 
 export type RegisterReturns = {
-  code: number;
   data: {
     accessToken: string;
   };
 };
 
 export type UserInfoReturns = {
-  code: number;
   data: {
-    categoryId: number;
+    id: number;
     name: number;
   };
 };

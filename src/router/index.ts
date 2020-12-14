@@ -1,3 +1,7 @@
+import { getUserInfo } from '@/apis/account';
+import store from '@/store';
+import { AccountActions } from '@/store/modules/account/types';
+import { AppActions } from '@/store/modules/app/types';
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
@@ -23,17 +27,79 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/post/add',
-    name: 'CreatePost',
+    name: 'PostAdd',
     meta: {
       requiredLogin: true,
     },
-    component: () => import(/* webpackChunkName: "create-post" */ '@/views/CreatePost.vue'),
+    component: () => import(/* webpackChunkName: "post-operation" */ '@/views/PostOperation.vue'),
+  },
+  {
+    path: '/post/edit/:id',
+    name: 'PostEdit',
+    meta: {
+      requiredLogin: true,
+    },
+    component: () => import(/* webpackChunkName: "post-operation" */ '@/views/PostOperation.vue'),
+  },
+  {
+    path: '/post/:id',
+    name: 'PostShow',
+    component: () => import(/* webpackChunkName: "post-show" */ '@/views/PostShow.vue'),
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+// 设置路由守卫
+router.beforeEach(async (to, from, next) => {
+  const accessToken = localStorage.getItem('accessToken');
+  const { user } = store.state.account;
+  const { initDataComplete } = store.state.app;
+  const { requiredLogin } = to.meta;
+
+  if (requiredLogin) {
+    if (accessToken) {
+      if (user) {
+        next();
+      } else {
+        try {
+          // 获取登陆的用户数据
+          const userInfo = await getUserInfo();
+
+          store.dispatch(AccountActions.UPDATE_USER, {
+            id: userInfo.data.id,
+            name: userInfo.data.name,
+          });
+
+          console.log('获取登陆状态成功');
+
+          next();
+        } catch (error) {
+          // 登陆状态已失效
+          localStorage.removeItem('accessToken');
+
+          console.error('登陆状态已失效');
+
+          next({
+            name: 'Login',
+          });
+        }
+      }
+    } else {
+      next({
+        name: 'Login',
+      });
+    }
+  } else {
+    next();
+  }
+
+  if (!initDataComplete) {
+    store.dispatch(AppActions.UPDATE_INIT_DATA_COMPLETE, true);
+  }
 });
 
 export default router;

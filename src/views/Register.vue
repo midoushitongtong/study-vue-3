@@ -123,8 +123,7 @@ export default defineComponent({
 
           const userInfo = await getUserInfo();
           store.dispatch(AccountActions.UPDATE_USER, {
-            isLogin: true,
-            categoryId: userInfo.data.categoryId,
+            id: userInfo.data.id,
             name: userInfo.data.name,
           });
 

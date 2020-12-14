@@ -7,6 +7,13 @@ export type Post = {
   categoryId: number;
 };
 
+export type PostDetail = Post & {
+  author: {
+    id: number;
+    name: string;
+  };
+};
+
 export type GetPostListReturns = {
   data: Post[];
   pageNumber: number;
@@ -14,11 +21,14 @@ export type GetPostListReturns = {
   total: number;
 };
 
-export type AddPostParams = void;
+export type GetPostDetailReturns = {
+  data: PostDetail;
+};
+
+export type AddPostParams = Partial<Post>;
 
 export type AddPostReturns = void;
 
 export type UploadFileReturns = {
-  code: number;
   url: string;
 };

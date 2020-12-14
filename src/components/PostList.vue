@@ -2,10 +2,28 @@
   <div class="post-list">
     <div v-for="item of postList" :key="item.id" class="card mb-3 shadow-sm">
       <div class="card-body">
-        <h4>{{ item.title }}</h4>
+        <RouterLink
+          :to="{
+            name: 'PostShow',
+            params: {
+              id: item.id,
+            },
+          }"
+        >
+          <h4>{{ item.title }}</h4>
+        </RouterLink>
         <div class="row my-3 aign-items-center">
           <div v-if="item.image" class="col-3">
-            <img :src="item.image" :alt="item.title" class="w-100 avatar" />
+            <RouterLink
+              :to="{
+                name: 'PostShow',
+                params: {
+                  id: item.id,
+                },
+              }"
+            >
+              <img :src="item.image" :alt="item.title" class="w-100 avatar" />
+            </RouterLink>
           </div>
           <div :class="[item.image ? 'col-9' : '']">
             {{ item.content }}
@@ -33,6 +51,11 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+a {
+  text-decoration: none;
+  color: #101010;
+}
+
 .avatar {
   border-radius: 5px;
 }

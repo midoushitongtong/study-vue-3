@@ -14,29 +14,52 @@
     <div class="mb-3">
       <h4 class="text-center">发现精彩</h4>
     </div>
-    <CategoryList :categoryList="categoryList" />
+    <Loading v-if="isLoading" />
+    <CategoryList v-else :categoryList="categoryList" />
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
+import Loading from '@/components/Loading.vue';
 import CategoryList from '@/components/CategoryList.vue';
-import { useStore } from '@/store';
+import { getCategoryList } from '@/apis/category';
+import { Category } from '@/apis/category/types';
 
 export default defineComponent({
-  name: 'App',
+  name: 'Home',
   components: {
+    Loading,
     CategoryList,
   },
   setup() {
     // data ========================================================================================================================
-    const store = useStore();
+    const isLoading = ref(true);
 
-    // computed ========================================================================================================================
-    const categoryList = computed(() => store.state.content.categoryList);
+    const categoryList = ref<Category[]>([]);
+
+    // method ========================================================================================================================
+    // 获取分类数据
+    const iniData = async () => {
+      try {
+        isLoading.value = true;
+        const result = await getCategoryList();
+        categoryList.value = result.data;
+        isLoading.value = false;
+      } catch (error) {
+        console.error('获取 api 数据失败');
+        console.error(error);
+      }
+    };
+
+    // lifecycle ========================================================================================================================
+    onMounted(() => {
+      iniData();
+    });
 
     // template data ========================================================================================================================
     return {
+      isLoading,
       categoryList,
     };
   },

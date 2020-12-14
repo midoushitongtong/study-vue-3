@@ -1,5 +1,5 @@
 <template>
-  <div class="file-upload">
+  <div class="file-upload" v-bind="attrs">
     <slot v-if="fileStatus === 'loading'" name="loading" :triggetUpload="triggetUpload">
       <button class="btn btn-primary">正在上传 ...</button>
     </slot>
@@ -31,6 +31,7 @@ type ValideFile = (file: File) => boolean;
 
 export default defineComponent({
   name: 'Upload',
+  inheritAttrs: false,
   props: {
     action: {
       type: String,
@@ -121,6 +122,7 @@ export default defineComponent({
       triggetUpload,
       uploadResult,
       handleFileChange,
+      attrs: context.attrs,
     };
   },
 });

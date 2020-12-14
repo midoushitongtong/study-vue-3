@@ -55,9 +55,9 @@ export default defineComponent({
     };
 
     // lifecycle ========================================================================================================================
-    emitter.on('validate-form-item-mounted', handleValidateFormItemMounted);
+    emitter.on('validateFormItemMounted', handleValidateFormItemMounted);
     onUnmounted(() => {
-      emitter.off('validate-form-item-mounted', handleValidateFormItemMounted);
+      emitter.off('validateFormItemMounted', handleValidateFormItemMounted);
     });
 
     // template data ========================================================================================================================

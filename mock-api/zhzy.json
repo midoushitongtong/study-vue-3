@@ -8,7 +8,7 @@
         "lastMigration": 11,
         "name": "fork-zhihu",
         "endpointPrefix": "",
-        "latency": 50,
+        "latency": 1,
         "port": 3000,
         "routes": [
           {
@@ -19,7 +19,7 @@
             "responses": [
               {
                 "uuid": "",
-                "body": "{\n  \"code\": 0,\n  \"data\": {\n    \"accessToken\": \"aaa\"\n  }\n}\n",
+                "body": "{\n  \"data\": {\n    \"accessToken\": \"aaa\"\n  }\n}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",
@@ -45,7 +45,7 @@
             "responses": [
               {
                 "uuid": "",
-                "body": "{\n  \"code\": 0,\n  \"data\": {\n    \"accessToken\": \"aaa\"\n  }\n}\n",
+                "body": "{\n  \"data\": {\n    \"accessToken\": \"aaa\"\n  }\n}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",
@@ -71,7 +71,7 @@
             "responses": [
               {
                 "uuid": "",
-                "body": "{\n  \"code\": 0,\n  \"data\": {\n    \"categoryId\": 2,\n    \"name\": \"abc 123\"\n  }\n}\n",
+                "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"abc 123\"\n  }\n}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",
@@ -119,11 +119,63 @@
             "uuid": "",
             "documentation": "",
             "method": "get",
-            "endpoint": "postList",
+            "endpoint": "category/:id",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{\n  \"data\":  {\n    \"id\": 1,\n    \"title\": \"bilibili吧\",\n    \"description\": \"bilibili吧，简称大B吧。创建于2010年初。主要讨论bilibili弹幕视频网站相关的ACGN文化话题。\",\n    \"avatar\": \"https://pic3.zhimg.com/50/938ddd38076eb0c011d3cb5024fd0e5a_720w.png?source=54b3c3a5\"\n  }\n}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "postList/:categoryId",
             "responses": [
               {
                 "uuid": "",
                 "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"我是一名重点初中的学生，初一前十，现在初三，掉到了四十，，每天2点睡觉刷b站，请问怎么才能管理自己？\",\n      \"content\": \"不用手机\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 2,\n      \"title\": \"看完B站今年被人发了500万次的弹幕，爷的青春的结束了\",\n      \"content\": \"不知道各位差友有没有发现，2020 年已经进入了尾声。今年还剩下不到 8% ，按照往年的习惯，各大软件的年度盘点也快到货了，不过比一大波年度盘点先来的是 B 站的 2020 年度弹幕。根据 B 站的统计，这一年大家一共在 B 站发出了 2275216512 条弹幕。数了一下，嗯，也就 22.75 亿条。。。其中 5420359 用户使用了「 爷青回 」，成功把这个词送上了 2020 年度弹幕的宝座。而另外几个年度热词则是：武汉加油、有内味了、双厨狂喜、禁止套娃。\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"image\": \"https://pic4.zhimg.com/50/v2-ddd65d8e32bde1adf69940267ae72b30_720w.jpg?source=54b3c3a5\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 3,\n      \"title\": \"B站上有什么好看的比较轻松的校园番？\",\n      \"content\": \"高中校园番第一：校园迷糊大王 \\n 大学校园番第一：蜂蜜与四叶草\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 4,\n      \"title\": \"如何看待B站的饭圈文化？\",\n      \"content\": \"做大了就这样，然而我看我的番，与我无瓜，大不了关弹幕，虽然有些气人，不过何必徒增烦恼，和自己关注的up一起占块地方爱干嘛干嘛。\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 5,\n      \"title\": \"哔哩哔哩助手 1.2.26中文版 (哔哩哔哩弹幕网辅助扩展插件)\",\n      \"content\": \"哔哩哔哩助手Bilibili Helper是一款基于Chrome内核的浏览器插件。通过Bilibili Helper可以简单方便的修改B站Flash播放器为最新的HTML5网页播放器，同时还可以绕过B站的区域限制看仅限部分地区可看的新番、拥有关注动态通知推送、视频及弹幕下载、反向查询弹幕发送者B站帐户等功能!\",\n      \"image\": \"https://pic3.zhimg.com/v2-2bdaffcb50748a016af436fd6c8ab646_b.jpg\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 6,\n      \"title\": \"你在B站第一个关注的up是谁？\",\n      \"content\": \"如图\",\n      \"image\": \"https://pic2.zhimg.com/80/v2-d765dedfb1420dcade821468b9fa10a5_720w.jpg?source=54b3c3a5\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 7,\n      \"title\": \"B站（哔哩哔哩弹幕网）：当代文字狱，霸权主义的乐园，陶片放逐法的传承，网络冷暴力的始源者。\",\n      \"content\": \"事情发生于2020年11月11日凌晨1点到6点，与一头网牲辩论之后想改昵称，一改未果，变成默认头像，默认昵称，硬币-6；二改未果，变成默认头像，默认昵称；硬币再-6，三改、四改、五改，依然如此，碰上硬茬管理员了。于是六改“馆鲤猿弹琴麻花油炸”，被改，七改“馆琴鲤-马猿梅”，还是被改，八改“关里猿人感觉正编竹篾”，持续了很长一段时间，向客服询问是否违规……一会儿后直接被改并且封号，它找不到人身攻击的证据，就强行安上一个违反运营规则。这就是霸权主义，这就是当代文字狱。昵称：关里猿人感觉正编竹篾。签名：住在关里的猿人，感觉到正在编织竹筐，请问有什么问题吗？结果如下只要你遇到那个管理员。甚至于admin你不能使用（ad-mi-n），管理员这三个字的同音不能使用，人人平等的社会，你TM搞皇帝霸权是吧？还整个不能触及名讳的文字狱是吧？下面说陶片放逐法，这是最没有人权的，只要一群各不相同的风纪委猿，这类网畜一人投一票就能把你几万点赞的正常评论给投掉。再者就是网络冷暴力，整天的“爬”充斥着弹幕，却举报不成功；整天的阴阳怪气充斥着弹幕，却举报不成功。普通话标准的上来就“营销号爬”，跟被灭族了一样。…………\",\n      \"image\": \"https://pic1.zhimg.com/v2-9a1e2ed94c97730651492c132fb9db64_b.jpg\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 8,\n      \"title\": \"哔哩哔哩为啥没有播放量？是因为信用分被扣到80吗？\",\n      \"content\": \"大家好，我2020年4月开始在哔哩哔哩做搞笑视频搬运剪辑的，做了大概一个月，没有播放量，没有粉丝，失望了断更半年，最近闲来无事又接着鼓捣，就靠一个性感跳舞视频一下增加了28个粉丝，播放量4000多，\",\n      \"image\": \"https://pic1.zhimg.com/v2-afc99b561f6b5682cf63712f664ded24_b.jpg\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 9,\n      \"title\": \"产品分析 | B站－年轻人的时代盛筵\",\n      \"content\": \"从二次元起家的UGC视频平台到中国年轻世代高度聚集的文化社区和综合性视频平台，哔哩哔哩在破圈的路上策马奔腾，一路鲜花掌声和谩骂质疑齐飞。黄沙漫道真如铁，小破站今从头越。本文将结合B站现状及未来如何发展全面解析。\",\n      \"image\": \"https://pic1.zhimg.com/50/v2-e02463904329146729a8de5c3167d63c_720w.jpg?source=54b3c3a5\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 10,\n      \"title\": \"b站视频下载，最简单方便的方法\",\n      \"content\": \"上网快20年了，一直是个视频下载的重度用户，用过很多软件和网站进行下载，各有特点吧，总体感觉还行，但是不是那么顺手，体验上差点。3年前，我想了下，我为什么不在星愿浏览器上自己做一个最简单方便的视频下载功能呢？这个功能诞生了。。。最开始是为了自己下youtube视频更方便的，我个人的需求是：1，可选择当前视频支持的所有分辨率，我想下哪个下哪个。2，Youtube上的视频，1080p以上，视频和音频是分离的，我还得另外再找软件合成。。。然后，我就在星愿浏览器里加了自动合成。3，外网不稳定，说不定什么时候就卡了下，又要重新开始。。。然后，我就在星愿浏览器里加了多线程下载，这样能下载更快点。再后来，我就在b站也做了分辨率可选。（备注下：其他的视频网站并没有做特别的支持，p站啊什么的，也是可以的，其他的视频网站，如果是默认的标准视频，应该也能下载。至于爱优腾这类大站，因为有广告，如果支持下载，就会被告的。还有一些教育类，培训类，收费的，也没有做专门的支持。。。）\",\n      \"image\": \"https://pic4.zhimg.com/50/v2-e5e4ca48e0544c7d4967dde6f5c2d0ce_720w.jpg?source=54b3c3a5\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    },\n    {\n      \"id\": 11,\n      \"title\": \"b站为什么要把av号改成bv号？\",\n      \"content\": \"建议看下一个叫树根龙门阵的UP主关于av变bv的视频 BV1U7411m75S，讲的很清楚。\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"categoryId\": 1\n    }\n  ],\n  \"pageNumber\": \"{{ queryParam 'pageNum' '1'  }}\",\n  \"pageSize\": \"{{ queryParam 'pagePageSize' '10'  }}\",\n  \"total\": 50\n}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "get",
+            "endpoint": "post/:id",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "  {\n    \"data\": {\n      \"id\": 1,\n      \"title\": \"BILIBILI产品体验报告\",\n      \"content\": \"<p><b>一、产品概况</b></p><p><b>1.体验环境</b></p><p>体验机型：iPHONE 8PLUS</p><p>操作系统：iOS 12.1.4</p><p>产品版本：5.39.1</p><p>体验时间：2019.2</p><p><b>2.产品简介</b></p><p>类型：聚合类视频平台、泛二次元文化社区</p><p>slogan： 哔哩哔哩 (゜-゜)つロ 干杯~</p><p>产品介绍：哔哩哔哩（bilibili）现为国内领先的年轻人文化社区，该网站于2009年6月26日创建，被粉丝们亲切的称为“B站”。B站的特色是悬浮于视频上方的实时评论功能，爱好者称其为“弹幕”，这种独特的视频体验让基于互联网的弹幕能够超越时空限制，构建出一种奇妙的共时性的关系，形成一种虚拟的部落式观影氛围，让B站成为极具互动分享和二次创造的文化社区。B站目前也是众多网络热门词汇的发源地之一。</p>\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"image\": \"https://pic2.zhimg.com/v2-a2a9689a449facd9517ff1d616f3449e_1440w.jpg?source=172ae18b\",\n      \"author\": {\n        \"id\": 1,\n        \"name\": \"abc 123\"\n      }, \n      \"categoryId\": 1\n    }\n  }",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",
@@ -149,7 +201,7 @@
             "responses": [
               {
                 "uuid": "",
-                "body": "{\n  \"code\": 0 \n}\n",
+                "body": "{\n  \"url\": \"https://pic2.zhimg.com/v2-a2a9689a449facd9517ff1d616f3449e_1440w.jpg?source=172ae18b\"\n}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",
@@ -175,7 +227,7 @@
             "responses": [
               {
                 "uuid": "",
-                "body": "{\n  \"code\": 0 \n}\n",
+                "body": "{}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",

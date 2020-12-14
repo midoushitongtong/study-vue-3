@@ -12,3 +12,9 @@ export type GetCategoryListReturns = {
   pageSize: number;
   total: number;
 };
+
+export type CategoryDetail = Category;
+
+export type GetCategoryDetailReturns = {
+  data: CategoryDetail;
+};

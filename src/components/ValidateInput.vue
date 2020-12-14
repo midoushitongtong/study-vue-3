@@ -139,7 +139,7 @@ export default defineComponent({
 
     // lifecycle
     onMounted(() => {
-      emitter?.emit('validate-form-item-mounted', {
+      emitter?.emit('validateFormItemMounted', {
         validateFormValue,
         resetFormValue,
       });
