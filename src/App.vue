@@ -1,7 +1,7 @@
 <template>
   <template v-if="initDataComplete">
     <GlobalHeader />
-    <router-view />
+    <RouterView />
     <GlobalFooter />
   </template>
   <Loading v-else />
@@ -26,7 +26,8 @@ export default defineComponent({
     // data ========================================================================================================================
     const store = useStore();
 
-    // computed
+    // computed ========================================================================================================================
+    // 数据是否已经初始化完成了, 在路由守卫中会设置该值
     const initDataComplete = computed(() => store.state.app.initDataComplete);
 
     // template data ========================================================================================================================

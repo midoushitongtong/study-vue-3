@@ -60,41 +60,45 @@ router.beforeEach(async (to, from, next) => {
   const { initDataComplete } = store.state.app;
   const { requiredLogin } = to.meta;
 
-  if (requiredLogin) {
-    if (accessToken) {
-      if (user) {
+  if (accessToken) {
+    if (user) {
+      next();
+    } else {
+      try {
+        // 获取登陆的用户数据
+        const userInfo = await getUserInfo();
+
+        store.dispatch(AccountActions.UPDATE_USER, {
+          id: userInfo.data.id,
+          name: userInfo.data.name,
+        });
+
+        console.log('获取登陆状态成功');
+
         next();
-      } else {
-        try {
-          // 获取登陆的用户数据
-          const userInfo = await getUserInfo();
+      } catch (error) {
+        // 登陆状态已失效
+        localStorage.removeItem('accessToken');
 
-          store.dispatch(AccountActions.UPDATE_USER, {
-            id: userInfo.data.id,
-            name: userInfo.data.name,
-          });
+        console.error('登陆状态已失效');
 
-          console.log('获取登陆状态成功');
-
-          next();
-        } catch (error) {
-          // 登陆状态已失效
-          localStorage.removeItem('accessToken');
-
-          console.error('登陆状态已失效');
-
+        if (requiredLogin) {
           next({
             name: 'Login',
           });
+        } else {
+          next();
         }
       }
-    } else {
+    }
+  } else {
+    if (requiredLogin) {
       next({
         name: 'Login',
       });
+    } else {
+      next();
     }
-  } else {
-    next();
   }
 
   if (!initDataComplete) {

@@ -10,7 +10,10 @@
       class="my-4"
     >
       <template #default="{ triggetUpload }">
-        <div @click="triggetUpload" class="upload-area bg-light text-second">点击上传封面</div>
+        <div v-if="image" @click="triggetUpload" class="upload-area bg-light text-second">
+          <img :src="image" class="preview-image" />
+        </div>
+        <div v-else @click="triggetUpload" class="upload-area bg-light text-second">点击上传封面</div>
       </template>
       <template #success="{ uploadResult, triggetUpload }">
         <div @click="triggetUpload" class="upload-area bg-light text-second">
@@ -46,7 +49,10 @@
         />
       </div>
       <template #submit>
-        <button type="submit" class="btn btn-primary mr-2">提交</button>
+        <button type="submit" class="btn btn-primary mr-2">
+          <template v-if="isEdit">更新</template>
+          <template v-else>提交</template>
+        </button>
       </template>
     </ValidateForm>
   </div>
@@ -55,16 +61,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import ValidateForm, { ValidateFormRef } from '@/components/ValidateForm.vue';
 import ValidateInput, { Rule } from '@/components/ValidateInput.vue';
-import { useRouter } from 'vue-router';
-import { Post, UploadFileReturns } from '@/apis/post/types';
+import { useRoute, useRouter } from 'vue-router';
+import { AddPostParams, EditPostParams, UploadFileReturns } from '@/apis/post/types';
 import Upload from '@/components/Upload.vue';
 import config from '@/config';
 import { showMessage } from '@/utils/message';
 import Loading from '@/components/Loading.vue';
-import { addPost } from '@/apis/post';
+import { addPost, editPost, getPostDetail } from '@/apis/post';
 
 type FormValues = {
   title: string;
@@ -87,8 +93,17 @@ export default defineComponent({
     // data ========================================================================================================================
     const router = useRouter();
 
+    const route = useRoute();
+
     const isLoading = ref<boolean>(false);
 
+    // 是否是编辑操作
+    const isEdit = !!route.params.id;
+
+    // 修改的 id
+    const id = route.params.id;
+
+    // 文章图片地址
     const image = ref<string | null>(null);
 
     const validateFormRef = ref<ValidateFormRef | null>(null);
@@ -106,47 +121,88 @@ export default defineComponent({
     // method ========================================================================================================================
     const handleFormSubmit = async (isValid: boolean) => {
       if (isValid) {
-        try {
-          isLoading.value = true;
+        if (!isEdit) {
+          try {
+            isLoading.value = true;
 
-          const currentDate = new Date();
-          const newPost: Partial<Post> = {
-            id: currentDate.getTime(),
-            title: formValues.value.title,
-            content: formValues.value.content,
-            // 生成日期字符串 (2020-01-01 01:01:01)
-            createdAt: `${currentDate.getFullYear()}-${currentDate
-              .getMonth()
-              .toString()
-              .padStart(2, '0')}-${currentDate
-              .getDate()
-              .toString()
-              .padStart(2, '0')} ${currentDate
-              .getHours()
-              .toString()
-              .padStart(2, '0')}:${currentDate
-              .getMinutes()
-              .toString()
-              .padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`,
-          };
+            // 新增
+            const currentDate = new Date();
+            const postData: AddPostParams = {
+              title: formValues.value.title,
+              content: formValues.value.content,
+              // 生成日期字符串 (2020-01-01 01:01:01)
+              createdAt: `${currentDate.getFullYear()}-${currentDate
+                .getMonth()
+                .toString()
+                .padStart(2, '0')}-${currentDate
+                .getDate()
+                .toString()
+                .padStart(2, '0')} ${currentDate
+                .getHours()
+                .toString()
+                .padStart(2, '0')}:${currentDate
+                .getMinutes()
+                .toString()
+                .padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`,
+            };
 
-          if (image.value) {
-            newPost.image = image.value;
+            if (image.value) {
+              postData.image = image.value;
+            }
+
+            await addPost(postData);
+
+            router.push({
+              name: 'PostShow',
+              params: {
+                id: '1',
+              },
+            });
+
+            setTimeout(() => {
+              showMessage('文章已创建', 'success');
+            }, 500);
+          } catch (error) {
+            console.error('获取 api 数据失败');
+            console.error(error);
+          } finally {
+            isLoading.value = false;
           }
+        } else {
+          try {
+            // 修改
+            if (typeof id === 'string') {
+              isLoading.value = true;
 
-          await addPost(newPost);
+              const postData: EditPostParams = {
+                id,
+                title: formValues.value.title,
+                content: formValues.value.content,
+              };
 
-          isLoading.value = false;
+              if (image.value) {
+                postData.image = image.value;
+              }
 
-          router.push({
-            name: 'PostShow',
-            params: {
-              id: '1',
-            },
-          });
-        } catch (error) {
-          console.error('获取 api 数据失败');
-          console.error(error);
+              await editPost(postData);
+
+              router.push({
+                name: 'PostShow',
+                params: {
+                  id: '1',
+                },
+              });
+
+              setTimeout(() => {
+                showMessage('文章已更新', 'success');
+              }, 500);
+            }
+          } catch (error) {
+            console.error('获取 api 数据失败');
+            console.error(error);
+          } finally {
+            isLoading.value = false;
+          }
         }
       }
     };
@@ -173,9 +229,34 @@ export default defineComponent({
       image.value = data.url;
     };
 
+    // lifecycle ========================================================================================================================
+    onMounted(async () => {
+      if (isEdit && typeof id === 'string') {
+        try {
+          isLoading.value = true;
+
+          const postDetail = await getPostDetail(id);
+
+          formValues.value.title = postDetail.data.title;
+          formValues.value.content = postDetail.data.content;
+
+          if (postDetail.data.image) {
+            image.value = postDetail.data.image;
+          }
+        } catch (error) {
+          console.error('获取 api 数据失败');
+          console.error(error);
+        } finally {
+          isLoading.value = false;
+        }
+      }
+    });
+
     // template data ========================================================================================================================
     return {
       isLoading,
+      isEdit,
+      image,
       validateFormRef,
       formValues,
       formRules,

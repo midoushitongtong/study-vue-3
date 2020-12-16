@@ -12,9 +12,18 @@
         </div>
         <div class="text-secondary">{{ postDetail.createdAt }}</div>
       </div>
-      <div class="mt-5 pb-3" v-html="postDetail.content"></div>
-      <div v-if="isAuthor">
-        <button class="btn btn-primary">编辑</button>
+      <div class="mt-5 content" v-html="postDetail.content"></div>
+      <div v-if="isAuthor" class="action mt-5">
+        <RouterLink
+          :to="{
+            name: 'PostEdit',
+            params: {
+              id: postDetail.id,
+            },
+          }"
+        >
+          <button class="btn btn-primary">编辑</button>
+        </RouterLink>
         <button class="btn ml-3 btn-danger">删除</button>
       </div>
     </template>
@@ -61,7 +70,6 @@ export default defineComponent({
     };
 
     // computed ========================================================================================================================
-
     const isAuthor = computed(() => {
       if (postDetail.value && store.state.account.user) {
         return postDetail.value.author.id === store.state.account.user.id;
@@ -94,6 +102,9 @@ export default defineComponent({
   .base-info {
     border-top: 1px solid #eee;
     border-bottom: 1px solid #eee;
+  }
+  .content {
+    white-space: pre-wrap;
   }
 }
 </style>
