@@ -6,7 +6,8 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "fix:prettier": "prettier --write \"./src/**/*.{ts,vue}\"",
-    "fix:eslint": "eslint --fix \"./src/**/*.{ts,vue}\""
+    "fix:eslint": "eslint --fix \"./src/**/*.{ts,vue}\"",
+    "typescript": "tsc --noEmit"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -43,8 +44,8 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "yarn fix:eslint && yarn fix:prettier"
+      "pre-commit": "yarn fix:eslint && yarn typescript",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   }
 }
