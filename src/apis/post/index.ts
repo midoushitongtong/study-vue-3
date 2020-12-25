@@ -3,6 +3,8 @@ import fetch from '@/utils/fetch';
 import {
   AddPostParams,
   AddPostReturns,
+  DeletePostParams,
+  DeletePostReturns,
   EditPostParams,
   EditPostReturns,
   GetPostDetailReturns,
@@ -23,6 +25,12 @@ export const addPost = (params: AddPostParams): Promise<AddPostReturns> => {
 
 export const editPost = (params: EditPostParams): Promise<EditPostReturns> => {
   return fetch.put<EditPostReturns>(`${config.apiRoot}/post/${params.id}`, params).then((result) => {
+    return result.data;
+  });
+};
+
+export const deletePost = (params: DeletePostParams): Promise<DeletePostReturns> => {
+  return fetch.delete<EditPostReturns>(`${config.apiRoot}/post/${params.id}`).then((result) => {
     return result.data;
   });
 };

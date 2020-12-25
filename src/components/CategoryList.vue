@@ -3,7 +3,7 @@
     <div v-for="item of categoryList" :key="item.id" class="col-md-3 col-sm-4 col-6 mb-4">
       <div class="card shadow-sm">
         <div class="card-body text-center">
-          <RouterLink
+          <router-link
             :to="{
               name: 'CategoryDetail',
               params: {
@@ -12,10 +12,10 @@
             }"
           >
             <img :src="enhanceAvatar(item?.avatar)" :alt="item.title" class="avatar mb-3" />
-          </RouterLink>
+          </router-link>
           <h5 class="card-title title">{{ item.title }}</h5>
           <p class="card-text text-left description">{{ item.description }}</p>
-          <RouterLink
+          <router-link
             :to="{
               name: 'CategoryDetail',
               params: {
@@ -25,7 +25,7 @@
             class="btn btn-outline-primary"
           >
             进入专栏
-          </RouterLink>
+          </router-link>
         </div>
       </div>
     </div>

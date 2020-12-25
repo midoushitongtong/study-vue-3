@@ -16,7 +16,7 @@
     >
       <span>{{ message }}</span>
       <button type="button" class="close" @click="onRequestClose">
-        <span aria-hidden="true">&times;</span>
+        <span>&times;</span>
       </button>
     </div>
   </Teleport>

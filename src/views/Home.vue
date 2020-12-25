@@ -6,7 +6,7 @@
           <img src="@/assets/images/callout.svg" alt="callout" class="w-50" />
           <h2 class="mt-3">随心写作，自由表达</h2>
           <div class="mt-3">
-            <RouterLink to="/post/add" class="btn btn-primary my-2">开始写文章</RouterLink>
+            <router-link to="/post/add" class="btn btn-primary my-2">开始写文章</router-link>
           </div>
         </div>
       </div>
@@ -15,12 +15,17 @@
       <h4 class="text-center">发现精彩</h4>
     </div>
     <Loading v-if="isLoading" />
-    <CategoryList v-else :categoryList="categoryList" />
+    <template v-else>
+      <div class="scroll-view" ref="scrollView">
+        <CategoryList :categoryList="categoryList" />
+      </div>
+      <Loading v-if="isLoadMore" :coverScreen="false" />
+    </template>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import Loading from '@/components/Loading.vue';
 import CategoryList from '@/components/CategoryList.vue';
 import { getCategoryList } from '@/apis/category';
@@ -36,7 +41,11 @@ export default defineComponent({
     // data ========================================================================================================================
     const isLoading = ref(true);
 
+    const isLoadMore = ref(false);
+
     const categoryList = ref<Category[]>([]);
+
+    const scrollView = ref<HTMLDivElement>(null);
 
     // method ========================================================================================================================
     // 获取分类数据
@@ -52,15 +61,44 @@ export default defineComponent({
       }
     };
 
+    const loadMoreData = async () => {
+      if (isLoadMore.value) {
+        return;
+      }
+
+      isLoadMore.value = true;
+
+      setTimeout(async () => {
+        const result = await getCategoryList();
+        categoryList.value = categoryList.value.concat(result.data);
+        isLoadMore.value = false;
+      }, 500);
+    };
+
+    const handleScroll = (): void => {
+      if (scrollView.value) {
+        if (scrollView.value.getBoundingClientRect().bottom < window.innerHeight + 300) {
+          loadMoreData();
+        }
+      }
+    };
+
     // lifecycle ========================================================================================================================
     onMounted(() => {
       iniData();
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
     });
 
     // template data ========================================================================================================================
     return {
       isLoading,
       categoryList,
+      scrollView,
+      isLoadMore,
     };
   },
 });

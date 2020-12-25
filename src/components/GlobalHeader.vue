@@ -2,20 +2,20 @@
   <div class="bg-primary">
     <div class="container">
       <nav class="navbar navbar-dark bg-primary justify-content-between mb-4">
-        <RouterLink class="navbar-brand" to="/">者也专栏</RouterLink>
+        <router-link class="navbar-brand" to="/">者也专栏</router-link>
         <ul v-if="!user" class="list-inline mb-0">
           <li class="list-inline-item">
-            <RouterLink to="/login" class="btn btn-outline-light my-2">登陆</RouterLink>
+            <router-link to="/login" class="btn btn-outline-light my-2">登陆</router-link>
           </li>
           <li class="list-inline-item">
-            <RouterLink to="/register" class="btn btn-outline-light my-2">注册</RouterLink>
+            <router-link to="/register" class="btn btn-outline-light my-2">注册</router-link>
           </li>
         </ul>
         <ul v-else class="list-inline mb-0">
           <li class="list-inline-item">
             <Dropdown :title="`你好 ${user.name}`">
               <DropdownItem>
-                <RouterLink to="/post/add">新建文章</RouterLink>
+                <router-link to="/post/add">新建文章</router-link>
               </DropdownItem>
               <DropdownItem disabled>
                 <a>编辑资料</a>

@@ -121,30 +121,33 @@ export default defineComponent({
     // method ========================================================================================================================
     const handleFormSubmit = async (isValid: boolean) => {
       if (isValid) {
+        const postData: AddPostParams & EditPostParams = {
+          title: formValues.value.title,
+          content: formValues.value.content,
+          id: undefined,
+          createdAt: undefined,
+          image: undefined,
+        };
+
         if (!isEdit) {
           try {
             isLoading.value = true;
 
-            // 新增
+            // 生成日期字符串 (2020-01-01 01:01:01)
             const currentDate = new Date();
-            const postData: AddPostParams = {
-              title: formValues.value.title,
-              content: formValues.value.content,
-              // 生成日期字符串 (2020-01-01 01:01:01)
-              createdAt: `${currentDate.getFullYear()}-${currentDate
-                .getMonth()
-                .toString()
-                .padStart(2, '0')}-${currentDate
-                .getDate()
-                .toString()
-                .padStart(2, '0')} ${currentDate
-                .getHours()
-                .toString()
-                .padStart(2, '0')}:${currentDate
-                .getMinutes()
-                .toString()
-                .padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`,
-            };
+            postData.createdAt = `${currentDate.getFullYear()}-${currentDate
+              .getMonth()
+              .toString()
+              .padStart(2, '0')}-${currentDate
+              .getDate()
+              .toString()
+              .padStart(2, '0')} ${currentDate
+              .getHours()
+              .toString()
+              .padStart(2, '0')}:${currentDate
+              .getMinutes()
+              .toString()
+              .padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`;
 
             if (image.value) {
               postData.image = image.value;
@@ -170,15 +173,10 @@ export default defineComponent({
           }
         } else {
           try {
-            // 修改
             if (typeof id === 'string') {
               isLoading.value = true;
 
-              const postData: EditPostParams = {
-                id,
-                title: formValues.value.title,
-                content: formValues.value.content,
-              };
+              postData.id = id;
 
               if (image.value) {
                 postData.image = image.value;

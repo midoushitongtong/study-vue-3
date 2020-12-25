@@ -50,6 +50,14 @@ export type EditPostParams = {
 // 修改文章返回参数
 export type EditPostReturns = void;
 
+// 删除文章请求参数
+export type DeletePostParams = {
+  id: string;
+};
+
+// 删除文章返回参数
+export type DeletePostReturns = void;
+
 // 上传图片参数
 export type UploadFileReturns = {
   url: string;

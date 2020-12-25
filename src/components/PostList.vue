@@ -2,7 +2,7 @@
   <div class="post-list">
     <div v-for="item of postList" :key="item.id" class="card mb-3 shadow-sm">
       <div class="card-body">
-        <RouterLink
+        <router-link
           :to="{
             name: 'PostShow',
             params: {
@@ -11,10 +11,10 @@
           }"
         >
           <h4>{{ item.title }}</h4>
-        </RouterLink>
+        </router-link>
         <div class="row my-3 aign-items-center">
           <div v-if="item.image" class="col-3">
-            <RouterLink
+            <router-link
               :to="{
                 name: 'PostShow',
                 params: {
@@ -23,7 +23,7 @@
               }"
             >
               <img :src="item.image" :alt="item.title" class="w-100 avatar" />
-            </RouterLink>
+            </router-link>
           </div>
           <div :class="[item.image ? 'col-9' : '']">
             {{ item.content }}

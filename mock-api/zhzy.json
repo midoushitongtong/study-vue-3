@@ -8,7 +8,7 @@
         "lastMigration": 11,
         "name": "fork-zhihu",
         "endpointPrefix": "",
-        "latency": 1,
+        "latency": 0,
         "port": 3000,
         "routes": [
           {
@@ -170,12 +170,90 @@
           {
             "uuid": "",
             "documentation": "",
+            "method": "post",
+            "endpoint": "post",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "delete",
+            "endpoint": "post/:id",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
+            "method": "put",
+            "endpoint": "post/:id",
+            "responses": [
+              {
+                "uuid": "",
+                "body": "{}\n",
+                "latency": 0,
+                "statusCode": 200,
+                "label": "",
+                "headers": [
+                  {
+                    "key": "",
+                    "value": ""
+                  }
+                ],
+                "filePath": "",
+                "sendFileAsBody": false,
+                "rules": [],
+                "disableTemplating": false
+              }
+            ],
+            "enabled": true
+          },
+          {
+            "uuid": "",
+            "documentation": "",
             "method": "get",
             "endpoint": "post/:id",
             "responses": [
               {
                 "uuid": "",
-                "body": "  {\n    \"data\": {\n      \"id\": 1,\n      \"title\": \"BILIBILI产品体验报告\",\n      \"content\": \"<p><b>一、产品概况</b></p><p><b>1.体验环境</b></p><p>体验机型：iPHONE 8PLUS</p><p>操作系统：iOS 12.1.4</p><p>产品版本：5.39.1</p><p>体验时间：2019.2</p><p><b>2.产品简介</b></p><p>类型：聚合类视频平台、泛二次元文化社区</p><p>slogan： 哔哩哔哩 (゜-゜)つロ 干杯~</p><p>产品介绍：哔哩哔哩（bilibili）现为国内领先的年轻人文化社区，该网站于2009年6月26日创建，被粉丝们亲切的称为“B站”。B站的特色是悬浮于视频上方的实时评论功能，爱好者称其为“弹幕”，这种独特的视频体验让基于互联网的弹幕能够超越时空限制，构建出一种奇妙的共时性的关系，形成一种虚拟的部落式观影氛围，让B站成为极具互动分享和二次创造的文化社区。B站目前也是众多网络热门词汇的发源地之一。</p>\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"image\": \"https://pic2.zhimg.com/v2-a2a9689a449facd9517ff1d616f3449e_1440w.jpg?source=172ae18b\",\n      \"author\": {\n        \"id\": 1,\n        \"name\": \"abc 123\"\n      }, \n      \"categoryId\": 1\n    }\n  }",
+                "body": "  {\n    \"data\": {\n      \"id\": 1,\n      \"title\": \"BILIBILI产品体验报告\",\n      \"content\": \"产品\\n概况哔哩哔哩（bilibili）现为国内领先的年轻人文化社区，该网站于2009年6月26日创建，被粉丝们亲切的称为“B站”。B站的特色是悬浮于视频上方的实时评论功能，爱好者称其为“弹幕”，这种独特的视频体验让基于互联网的弹幕能够超越时空限制，构建出一种奇妙的共时性的关系，形成一种虚拟的部落式观影氛围，让B站成为极具互动分享和二次创造的文化社区。B站目前也是众多网络热门词汇的发源地之一。\",\n      \"createdAt\": \"2020-06-11 10:34:22\",\n      \"image\": \"https://pic2.zhimg.com/v2-a2a9689a449facd9517ff1d616f3449e_1440w.jpg?source=172ae18b\",\n      \"author\": {\n        \"id\": 1,\n        \"name\": \"abc 123\"\n      }\n    }\n  }",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",
@@ -202,32 +280,6 @@
               {
                 "uuid": "",
                 "body": "{\n  \"url\": \"https://pic2.zhimg.com/v2-a2a9689a449facd9517ff1d616f3449e_1440w.jpg?source=172ae18b\"\n}\n",
-                "latency": 0,
-                "statusCode": 200,
-                "label": "",
-                "headers": [
-                  {
-                    "key": "",
-                    "value": ""
-                  }
-                ],
-                "filePath": "",
-                "sendFileAsBody": false,
-                "rules": [],
-                "disableTemplating": false
-              }
-            ],
-            "enabled": true
-          },
-          {
-            "uuid": "",
-            "documentation": "",
-            "method": "post",
-            "endpoint": "post",
-            "responses": [
-              {
-                "uuid": "",
-                "body": "{}\n",
                 "latency": 0,
                 "statusCode": 200,
                 "label": "",

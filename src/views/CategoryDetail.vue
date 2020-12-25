@@ -17,12 +17,15 @@
       </div>
     </div>
     <hr />
-    <PostList :postList="postList" />
+    <div class="scroll-view" ref="scrollView">
+      <PostList :postList="postList" />
+    </div>
+    <Loading v-if="isLoadMore" :coverScreen="false" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import PostList from '@/components/PostList.vue';
 import { getCategoryDetial } from '@/apis/category';
@@ -41,11 +44,15 @@ export default defineComponent({
     // data ========================================================================================================================
     const isLoading = ref<boolean>(true);
 
+    const isLoadMore = ref<boolean>(false);
+
     const categoryDetail = ref<CategoryDetail | null>(null);
 
     const postList = ref<Post[]>([]);
 
     const route = useRoute();
+
+    const scrollView = ref<HTMLDivElement>(null);
 
     // method ========================================================================================================================
     const enhanceAvatar = (avatar?: string) => avatar || require('@/assets/images/column.jpg');
@@ -55,10 +62,12 @@ export default defineComponent({
       try {
         if (route.params.id && typeof route.params.id === 'string') {
           isLoading.value = true;
-          const result = await getCategoryDetial(route.params.id);
-          const result2 = await getPostList(route.params.id);
-          categoryDetail.value = result.data;
-          postList.value = result2.data;
+          const results = await Promise.all([
+            getCategoryDetial(route.params.id),
+            getPostList(route.params.id),
+          ]);
+          categoryDetail.value = results[0].data;
+          postList.value = results[1].data;
           isLoading.value = false;
         }
       } catch (error) {
@@ -67,9 +76,40 @@ export default defineComponent({
       }
     };
 
+    const loadMoreData = async () => {
+      if (isLoadMore.value) {
+        return;
+      }
+
+      isLoadMore.value = true;
+
+      setTimeout(async () => {
+        if (route.params.id && typeof route.params.id === 'string') {
+          const result = await getPostList(route.params.id);
+          postList.value = postList.value.concat(result.data);
+        }
+
+        isLoadMore.value = false;
+      }, 500);
+    };
+
+    const handleScroll = (): void => {
+      if (scrollView.value) {
+        if (scrollView.value.getBoundingClientRect().bottom < window.innerHeight + 300) {
+          loadMoreData();
+        }
+      }
+    };
+
     // lifecycle ========================================================================================================================
     onMounted(() => {
       iniData();
+
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll);
     });
 
     // template data ========================================================================================================================
@@ -78,6 +118,8 @@ export default defineComponent({
       categoryDetail,
       postList,
       enhanceAvatar,
+      scrollView,
+      isLoadMore,
     };
   },
 });
@@ -85,6 +127,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import '@/assets/scss/media.scss';
+
+.loading-container {
+  margin-top: 30px;
+}
 
 .avatar {
   border-radius: 5px;

@@ -1,7 +1,7 @@
 <template>
   <template v-if="initDataComplete">
     <GlobalHeader />
-    <RouterView />
+    <router-view />
     <GlobalFooter />
   </template>
   <Loading v-else />
