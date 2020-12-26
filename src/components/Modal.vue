@@ -88,6 +88,7 @@ export default defineComponent({
 
 <style lang="scss">
 .modal-wrapper {
+  z-index: 1031;
   background: rgba(0, 0, 0, 0.3);
   position: fixed;
   top: 0;
